@@ -123,7 +123,7 @@ Internally, this method runs `git log` with formatted output. The return value s
                     )
 
                 [authored_date] => 2010-09-22 19:17:35 +0200
-                [commiter] => Array
+                [committer] => Array
                     (
                         [name] => ornicar
                         [email] => myemail@gmail.com

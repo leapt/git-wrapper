@@ -78,9 +78,11 @@ class Repository
     {
         $output = $this->git('branch');
 
-        foreach (explode("\n", $this->git('branch')) as $branchLine) {
-            if ('*' === $branchLine[0]) {
-                return substr($branchLine, 2);
+        if ('' !== $output) {
+            foreach (explode("\n", $output) as $branchLine) {
+                if ('*' === $branchLine[0]) {
+                    return substr($branchLine, 2);
+                }
             }
         }
 
@@ -152,7 +154,7 @@ class Repository
                     'email' => $infos[3],
                 ],
                 'authored_date' => $infos[4],
-                'commiter'      => [
+                'committer'     => [
                     'name'  => $infos[5],
                     'email' => $infos[6],
                 ],
