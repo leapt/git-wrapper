@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Leapt\GitWrapper;
 
 use Leapt\GitWrapper\Exception\GitRuntimeException;
+use Symfony\Component\Process\Process;
 
 class Command
 {
@@ -26,23 +27,22 @@ class Command
             echo $commandToRun . "\n";
         }
 
-        ob_start();
-        passthru($commandToRun, $returnVar);
-        $output = ob_get_clean();
+        $process = Process::fromShellCommandline($commandToRun);
+        $process->run();
 
         if ($this->debug) {
-            echo $output . "\n";
+            echo $process->getOutput() . "\n";
         }
 
-        if (0 !== $returnVar) {
+        if (!$process->isSuccessful()) {
             // Git 1.5.x returns 1 when running "git status"
-            if (1 === $returnVar && 0 === strncmp($this->commandString, 'git status', 10)) {
+            if (1 === $process->getExitCode() && 0 === strncmp($this->commandString, 'git status', 10)) {
                 // it's ok
             } else {
-                throw new GitRuntimeException(sprintf('Command %s failed with code %s: %s', $commandToRun, $returnVar, $output), $returnVar);
+                throw new GitRuntimeException(sprintf('Command %s failed with code %s: %s', $commandToRun, $process->getExitCode(), $process->getErrorOutput()), $process->getExitCode());
             }
         }
 
-        return trim($output);
+        return trim($process->getOutput());
     }
 }
