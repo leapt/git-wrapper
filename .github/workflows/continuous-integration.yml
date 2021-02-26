@@ -36,6 +36,12 @@ jobs:
           dependency-versions: highest
           composer-options: '--prefer-stable'
 
+      - name: Setup Git
+        run: |
+          git config --global init.defaultBranch master
+          git config --global user.email git-wrapper@leapt.io
+          git config --global user.name "Leapt Git Wrapper"
+
       - name: Run php-cs-fixer
         run: 'vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr'
 
