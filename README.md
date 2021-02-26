@@ -1,5 +1,11 @@
 # Leapt Git Wrapper
 
+[![Package version](https://img.shields.io/packagist/v/leapt/git-wrapper.svg?style=flat-square)](https://packagist.org/packages/leapt/git-wrapper)
+[![Build Status](https://img.shields.io/github/workflow/status/leapt/git-wrapper/Continuous%20Integration/main?style=flat-square)](https://github.com/leapt/git-wrapper/actions?query=workflow%3A%22Continuous+Integration%22)
+![PHP Version](https://img.shields.io/packagist/php-v/leapt/git-wrapper.svg?branch=main&style=flat-square)
+[![License](https://img.shields.io/badge/license-MIT-red.svg?style=flat-square)](LICENSE)
+[![Code coverage](https://img.shields.io/codecov/c/github/leapt/git-wrapper?style=flat-square)](https://codecov.io/gh/leapt/git-wrapper/branch/main)
+
 Allows to manage a Git repository with PHP.
 Provides an object-oriented wrapper to run any Git command.
 
