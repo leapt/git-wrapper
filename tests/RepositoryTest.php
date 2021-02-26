@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Leapt\GitWrapper\Tests;
 
+use Leapt\GitWrapper\Configuration;
 use Leapt\GitWrapper\Exception\GitRuntimeException;
 use Leapt\GitWrapper\Exception\InvalidGitRepositoryDirectoryException;
 use Leapt\GitWrapper\Repository;
@@ -21,6 +22,95 @@ final class RepositoryTest extends TestCase
 
         $this->expectException(GitRuntimeException::class);
         $repository->git('checkout main');
+    }
+
+    public function testInvalidCommandFails(): void
+    {
+        $repository = $this->createEmptyRepository();
+        $this->expectException(GitRuntimeException::class);
+        $repository->git('unknown');
+    }
+
+    public function testValidateGitExecutableOption(): void
+    {
+        // Valid git binary
+        $repository = $this->createEmptyRepository(['git_executable' => '/usr/bin/git']);
+        self::assertStringContainsString('master', $repository->git('status'));
+
+        // Invalid git binary
+        $this->expectException(GitRuntimeException::class);
+        $repository = $this->createEmptyRepository(['git_executable' => '/usr/bin/git-foobar']);
+        $repository->git('status');
+    }
+
+    public function testCreateRepositoryOnExistingDirectoryMustFail(): void
+    {
+        $directory = $this->getTempDirectoryPath();
+        mkdir($directory);
+        $this->expectException(InvalidGitRepositoryDirectoryException::class);
+        new Repository($directory);
+    }
+
+    public function testSettingConfigurationSucceeds(): void
+    {
+        $repository = $this->createEmptyRepository();
+        $config = $repository->getConfiguration();
+        self::assertTrue($config->get('core.editor', true));
+        $config->set('core.editor', 'nano');
+        self::assertSame('nano', $config->get('core.editor'));
+        $config->remove('core.editor');
+        self::assertTrue($config->get('core.editor', true));
+    }
+
+    public function testCommittingSucceeds(): void
+    {
+        $repository = $this->createEmptyRepository();
+        file_put_contents($repository->getDirectory() . '/README.md', 'No, finally, do not read me.');
+        $repository->git('add README.md');
+        $repository->git('commit -m "Add README.md"');
+        unlink($repository->getDirectory() . '/README.md');
+        $repository->git('rm README.md');
+        $repository->git('commit -m "Remove README.md"');
+        $logs = $repository->getCommits(7);
+        self::assertIsArray($logs);
+        self::assertCount(2, $logs);
+
+        $config = $repository->getConfiguration();
+        $lastCommit = $logs[0];
+        self::assertIsArray($lastCommit);
+        self::assertSame('Remove README.md', $lastCommit['message']);
+        self::assertSame($config->get(Configuration::USER_NAME), $lastCommit['author']['name']);
+        self::assertSame($config->get(Configuration::USER_NAME), $lastCommit['committer']['name']);
+
+        $firstCommit = $logs[1];
+        self::assertSame('Add README.md', $firstCommit['message']);
+
+        // Test tags
+        self::assertSame([], $repository->getTags());
+
+        $repository->git('tag -am "tag 1" first_tag');
+        $repository->git('tag -am "tag 2" second_tag');
+        self::assertSame(['first_tag', 'second_tag'], $repository->getTags());
+
+        // Test difference between branches
+        $repository->git('checkout -b test');
+        self::assertSame('test', $repository->getCurrentBranch());
+
+        file_put_contents($repository->getDirectory() . '/CHANGELOG.md', 'Nothing yet.');
+        $repository->git('add CHANGELOG.md');
+        $repository->git('commit -m "Add CHANGELOG.md"');
+        $logs = $repository->getDifferenceBetweenBranches('master', 'test');
+        self::assertCount(1, $logs);
+        self::assertSame('Add CHANGELOG.md', $logs[0]['message']);
+    }
+
+    public function testCreate(): void
+    {
+        $directory = $this->getTempDirectoryPath();
+        mkdir($directory);
+        self::assertDirectoryDoesNotExist($directory . '/.git');
+        Repository::create($directory);
+        self::assertDirectoryExists($directory . '/.git');
     }
 
     public function testValidateCorrectRepository(): void
@@ -47,34 +137,34 @@ final class RepositoryTest extends TestCase
         self::assertSame('other_branch', $repository->getCurrentBranch());
     }
 
-    public function testInvalidCommandFails(): void
+    public function testCloneUrl(): void
     {
-        $repository = $this->createEmptyRepository();
-        $this->expectException(GitRuntimeException::class);
-        $repository->git('unknown');
+        $directory = $this->getTempDirectoryPath();
+        $repository = Repository::cloneUrl('https://github.com/leapt/git-wrapper.git', $directory);
+        self::assertSame('main', $repository->getCurrentBranch());
     }
 
     public function testInitializeInvalidDirectoryMustFail(): void
     {
-        $directory = sys_get_temp_dir() . '/leapt-git-wrapper/' . uniqid('', false);
+        $directory = $this->getTempDirectoryPath();
         self::assertDirectoryDoesNotExist($directory . '/.git');
 
         $this->expectException(InvalidGitRepositoryDirectoryException::class);
         new Repository($directory);
     }
-    
+
     private function createEmptyRepository(array $options = []): Repository
     {
-        $directory = sys_get_temp_dir() . '/leapt-git-wrapper/' . uniqid('', false);
+        $directory = $this->getTempDirectoryPath();
         self::assertDirectoryDoesNotExist($directory . '/.git');
 
         exec('git init ' . escapeshellarg($directory));
-        $repository = new Repository($directory, false, $options);
 
-        foreach (['LICENSE', 'composer.json'] as $file) {
-            //copy(__DIR__ . '/../' . $file, $directory . '/' . $file);
-        }
+        return new Repository($directory, false, $options);
+    }
 
-        return $repository;
+    private function getTempDirectoryPath(): string
+    {
+        return sys_get_temp_dir() . '/leapt-git-wrapper/' . uniqid('', false);
     }
 }
