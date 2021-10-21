@@ -21,9 +21,9 @@
         "symfony/process": "^5.2"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.18.2",
-        "phpstan/phpstan": "^0.12.78",
-        "phpunit/phpunit": "^9.5.2"
+        "friendsofphp/php-cs-fixer": "^3.2.1",
+        "phpstan/phpstan": "^0.12.99",
+        "phpunit/phpunit": "^9.5.10"
     },
     "scripts": {
         "ci": [
@@ -31,7 +31,7 @@
             "@phpstan",
             "@test"
         ],
-        "cs:dry": "php-cs-fixer fix --diff --diff-format=udiff --dry-run --no-interaction --ansi",
+        "cs:dry": "php-cs-fixer fix --diff --dry-run --no-interaction --ansi",
         "cs:fix": "php-cs-fixer fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse --ansi",
         "test": "vendor/bin/phpunit"
