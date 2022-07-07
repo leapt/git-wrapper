@@ -21,8 +21,11 @@ jobs:
           - '8.0'
           - '8.1'
         symfony-version:
-          - '5.3.*'
-          - '6.0.x@dev'
+          - '5.4.*'
+          - '6.0.*'
+        include:
+          - php-version: '8.1'
+            symfony-version: '6.1.*'
 
     steps:
       - name: Checkout
@@ -36,21 +39,12 @@ jobs:
           coverage: pcov
 
       - name: Install Symfony Flex
-        run: composer global require --no-progress --no-scripts --no-plugins symfony/flex
-
-      - name: Set composer minimum stability
-        run: composer config minimum-stability dev
-        if: matrix.symfony-version == '6.0.x@dev'
-
-      - name: Remove not compatible vendors
-        run: composer remove --no-update --dev friendsofphp/php-cs-fixer
-        if: matrix.symfony-version == '6.0.x@dev'
+        run: |
+          composer config --global --no-plugins allow-plugins.symfony/flex true
+          composer global require --no-progress --no-scripts --no-plugins symfony/flex
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v1
-        with:
-          dependency-versions: highest
-          composer-options: '--prefer-stable'
+        uses: ramsey/composer-install@v2
 
       - name: Setup Git
         run: |
@@ -63,4 +57,4 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
-        if: matrix.php-version == '8.0' && matrix.symfony-version == '5.3.*'
+        if: matrix.php-version == '8.0' && matrix.symfony-version == '6.0.*'
