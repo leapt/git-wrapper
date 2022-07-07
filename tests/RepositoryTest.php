@@ -116,7 +116,7 @@ final class RepositoryTest extends TestCase
     public function testValidateCorrectRepository(): void
     {
         $repository = $this->createEmptyRepository();
-        $repository->git('remote add origin git://github.com/leapt/git-wrapper.git');
+        $repository->git('remote add origin https://github.com/leapt/git-wrapper.git');
         $repository->git('fetch origin main:main');
         self::assertSame(['main'], $repository->getBranches());
         self::assertTrue($repository->hasBranch('main'));
