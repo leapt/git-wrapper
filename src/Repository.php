@@ -147,14 +147,14 @@ class Repository
         foreach (explode("\n", $logOutput) as $line) {
             $infos = explode('|', $line);
             $commits[] = [
-                'id'     => $infos[0],
-                'tree'   => $infos[1],
-                'author' => [
+                'id'             => $infos[0],
+                'tree'           => $infos[1],
+                'author'         => [
                     'name'  => $infos[2],
                     'email' => $infos[3],
                 ],
-                'authored_date' => $infos[4],
-                'committer'     => [
+                'authored_date'  => $infos[4],
+                'committer'      => [
                     'name'  => $infos[5],
                     'email' => $infos[6],
                 ],
