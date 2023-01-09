@@ -1,4 +1,4 @@
-name: "Continuous Integration"
+name: Continuous Integration
 
 on:
   pull_request:
@@ -11,25 +11,25 @@ on:
 jobs:
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php-version }} - Symfony ${{ matrix.symfony-version }})
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       SYMFONY_REQUIRE: ${{ matrix.symfony-version }}
 
     strategy:
       matrix:
         php-version:
-          - '8.0'
           - '8.1'
+          - '8.2'
         symfony-version:
           - '5.4.*'
-          - '6.0.*'
+          - '6.2.*'
         include:
-          - php-version: '8.1'
-            symfony-version: '6.1.*'
+          - php-version: '8.0'
+            symfony-version: '5.4.*'
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -56,5 +56,5 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        if: matrix.php-version == '8.1' && matrix.symfony-version == '6.1.*'
+        uses: codecov/codecov-action@v3
+        if: matrix.php-version == '8.2' && matrix.symfony-version == '6.2.*'
