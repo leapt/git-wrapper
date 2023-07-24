@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "symfony/process": "^5.2 || ^6.0"
+        "symfony/process": "^5.2 || ^6.0 || ^7.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.22.0",
@@ -45,5 +45,6 @@
         "psr-4": {
             "Leapt\\GitWrapper\\Tests\\": "tests/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
