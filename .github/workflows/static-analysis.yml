@@ -31,6 +31,9 @@ jobs:
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
+
+      - name: Install Composer dependencies for PHPStan
+        uses: ramsey/composer-install@v2
         with:
           composer-options: '--working-dir=tools/phpstan'
 
