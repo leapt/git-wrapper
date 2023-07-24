@@ -28,10 +28,11 @@ jobs:
           coverage: none
           php-version: ${{ matrix.php-version }}
           tools: cs2pr
-          composer-options: '--working-dir=tools/phpstan'
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
+        with:
+          composer-options: '--working-dir=tools/phpstan'
 
       - name: Run PHPStan
         run: 'tools/phpstan/vendor/bin/phpstan analyse --error-format=checkstyle | cs2pr'
