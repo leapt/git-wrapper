@@ -186,10 +186,27 @@ or [creating issues](https://github.com/leapt/git-wrapper/issues) :)
 
 Note there are a few helpers to maintain code quality, that you can run using these commands:
 
+### PHPStan
+
 ```bash
-composer cs:dry # Code style check
-composer phpstan # Static analysis
-vendor/bin/phpunit # Run test
+composer install --working-dir=tools/phpstan
+tools/phpstan/vendor/bin/phpstan analyze
+```
+
+### PHP CS Fixer
+
+```bash
+composer install --working-dir=tools/php-cs-fixer
+# Check what can be fixed
+tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff
+# Fix them
+tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --diff
+```
+
+### PHPUnit
+
+```bash
+vendor/bin/phpunit # Run tests
 composer test # An alias to run tests
 ```
 

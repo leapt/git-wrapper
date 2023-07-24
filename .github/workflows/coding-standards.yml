@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - '8.1'
+          - '8.2'
 
     steps:
       - name: Checkout code
@@ -31,6 +31,8 @@ jobs:
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
+        with:
+          composer-options: '--working-dir=tools/php-cs-fixer'
 
       - name: Run PHP CS Fixer
-        run: 'vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr'
+        run: 'tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr'

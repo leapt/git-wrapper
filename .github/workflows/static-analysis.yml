@@ -32,5 +32,10 @@ jobs:
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
 
+      - name: Install Composer dependencies for PHPStan
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: '--working-dir=tools/phpstan'
+
       - name: Run PHPStan
-        run: 'vendor/bin/phpstan analyse --error-format=checkstyle | cs2pr'
+        run: 'tools/phpstan/vendor/bin/phpstan analyse --error-format=checkstyle | cs2pr'

@@ -1,3 +1,9 @@
+1.2.0
+-----
+
+* Upgrade dev dependencies
+* Allow Symfony 7
+
 1.1.0
 -----
 
