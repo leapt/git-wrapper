@@ -43,6 +43,5 @@
         "psr-4": {
             "Leapt\\GitWrapper\\Tests\\": "tests/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
