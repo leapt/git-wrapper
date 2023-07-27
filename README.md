@@ -146,6 +146,8 @@ Internally, this method runs `git log` with formatted output. The return value s
 
 The first commit is the most recent one.
 
+You can also retrieve the last commit by calling `$repository->getLastCommit()`.
+
 ## Debug mode
 
 `Repository` constructor's second parameter lets you enable debug mode.

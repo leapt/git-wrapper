@@ -104,6 +104,23 @@ final class RepositoryTest extends TestCase
         self::assertSame('Add CHANGELOG.md', $logs[0]['message']);
     }
 
+    public function testGetLastCommitReturnsLastCommit(): void
+    {
+        $repository = $this->createEmptyRepository();
+        file_put_contents($repository->getDirectory() . '/README.md', 'No, finally, do not read me.');
+        $repository->git('add README.md');
+        $repository->git('commit -m "Add README.md"');
+        unlink($repository->getDirectory() . '/README.md');
+        $repository->git('rm README.md');
+        $repository->git('commit -m "Remove README.md"');
+        $lastCommit = $repository->getLastCommit();
+        self::assertIsArray($lastCommit);
+        self::assertArrayHasKey('id', $lastCommit);
+        self::assertArrayHasKey('author', $lastCommit);
+        self::assertArrayHasKey('committed_date', $lastCommit);
+        self::assertSame('Remove README.md', $lastCommit['message']);
+    }
+
     public function testCreate(): void
     {
         $directory = $this->getTempDirectoryPath();

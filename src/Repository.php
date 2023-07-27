@@ -111,6 +111,13 @@ class Repository
         return $this->parseLogsIntoArray($output);
     }
 
+    public function getLastCommit(): array
+    {
+        $output = $this->git(sprintf('log -n 1 --date=%s --format=format:%s', self::DATE_FORMAT, self::LOG_FORMAT));
+
+        return $this->parseLogsIntoArray($output)[0];
+    }
+
     public function checkIsValidGitRepo(): void
     {
         if (!file_exists($this->directory . '/.git/HEAD')) {
