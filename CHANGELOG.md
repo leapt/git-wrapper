@@ -2,6 +2,7 @@
 -----
 
 * Add `getLastCommit()` method
+* Improve tests & fix them locally
 
 1.2.0
 -----

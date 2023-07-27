@@ -51,8 +51,8 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config --global init.defaultBranch master
-          git config --global user.email git-wrapper@leapt.io
+          git config --global init.defaultBranch main
+          git config --global user.email git-wrapper@leapt.dev
           git config --global user.name "Leapt Git Wrapper"
 
       - name: Run PHPUnit

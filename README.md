@@ -212,6 +212,12 @@ vendor/bin/phpunit # Run tests
 composer test # An alias to run tests
 ```
 
+Note: tests rely on the default branch being `main`. This can be updated using the following command:
+
+```bash
+git config --global init.defaultBranch main
+```
+
 ## History
 
 This package is a maintained fork of the [ornicar/php-git-repo](https://github.com/ornicar/php-git-repo) package.

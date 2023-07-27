@@ -35,7 +35,7 @@ final class RepositoryTest extends TestCase
     {
         // Valid git binary
         $repository = $this->createEmptyRepository(['git_executable' => '/usr/bin/git']);
-        self::assertStringContainsString('master', $repository->git('status'));
+        self::assertStringContainsString('main', $repository->git('status'));
 
         // Invalid git binary
         $this->expectException(GitRuntimeException::class);
@@ -99,7 +99,7 @@ final class RepositoryTest extends TestCase
         file_put_contents($repository->getDirectory() . '/CHANGELOG.md', 'Nothing yet.');
         $repository->git('add CHANGELOG.md');
         $repository->git('commit -m "Add CHANGELOG.md"');
-        $logs = $repository->getDifferenceBetweenBranches('master', 'test');
+        $logs = $repository->getDifferenceBetweenBranches('main', 'test');
         self::assertCount(1, $logs);
         self::assertSame('Add CHANGELOG.md', $logs[0]['message']);
     }
@@ -134,7 +134,7 @@ final class RepositoryTest extends TestCase
     {
         $repository = $this->createEmptyRepository();
         $repository->git('remote add origin https://github.com/leapt/git-wrapper.git');
-        $repository->git('fetch origin main:main');
+        $repository->git('fetch origin main:main --update-head-ok');
         self::assertSame(['main'], $repository->getBranches());
         self::assertTrue($repository->hasBranch('main'));
 
