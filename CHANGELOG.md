@@ -1,3 +1,8 @@
+1.3.0
+-----
+
+* Add `getLastCommit()` method
+
 1.2.0
 -----
 
