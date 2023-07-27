@@ -4,6 +4,8 @@
 * Add `getLastCommit()` method
 * Improve tests & fix them locally
 * Increase PHPStan level to 7
+* Deprecate passing a command class that does not implement `Leapt\GitWrapper\CommandInterface`
+* Throw an exception if passing a command class that does not have a `run()` method
 
 1.2.0
 -----

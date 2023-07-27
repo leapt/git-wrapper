@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$commandClass of static method Leapt\\\\GitWrapper\\\\Repository\\:\\:createCommand\\(\\) expects class\\-string, string given\\.$#"
+			count: 3
+			path: src/Repository.php
