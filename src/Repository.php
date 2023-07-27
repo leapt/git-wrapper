@@ -53,7 +53,7 @@ class Repository
     {
         $options = array_merge(self::DEFAULT_OPTIONS, $options);
         $commandString = $options['git_executable'] . ' init';
-        $command = new $options['command_class']($directory, $commandString, $debug);
+        $command = self::createCommand($options['command_class'], $directory, $commandString, $debug);
         \assert(method_exists($command, 'run'));
         $command->run();
 
@@ -69,7 +69,7 @@ class Repository
     {
         $options = array_merge(self::DEFAULT_OPTIONS, $options);
         $commandString = $options['git_executable'] . ' clone ' . escapeshellarg($url) . ' ' . escapeshellarg($directory);
-        $command = new $options['command_class'](getcwd(), $commandString, $debug);
+        $command = self::createCommand($options['command_class'], (string) getcwd(), $commandString, $debug);
         \assert(method_exists($command, 'run'));
         $command->run();
 
@@ -157,7 +157,7 @@ class Repository
         $commandString = preg_replace('/^git\s/', '', $commandString);
         $commandString = $this->options['git_executable'] . ' ' . $commandString;
 
-        $command = new $this->options['command_class']($this->directory, $commandString, $this->debug);
+        $command = self::createCommand($this->options['command_class'], $this->directory, $commandString, $this->debug);
         \assert(method_exists($command, 'run'));
 
         return $command->run();
@@ -166,6 +166,22 @@ class Repository
     public function getDirectory(): string
     {
         return $this->directory;
+    }
+
+    /**
+     * @param class-string $commandClass
+     */
+    public static function createCommand(string $commandClass, string $directory, string $commandString, bool $debug): object
+    {
+        if (!\in_array(CommandInterface::class, class_implements($commandClass), true)) {
+            trigger_deprecation('leapt/git-wrapper', '1.3', 'Passing a Command class that does not implement "%s" is deprecated.', CommandInterface::class);
+
+            if (!method_exists($commandClass, 'run')) {
+                throw new \RuntimeException(sprintf('The Command class must implement a "public function run(): string" method, the "%s" class does not.', $commandClass));
+            }
+        }
+
+        return new $commandClass($directory, $commandString, $debug);
     }
 
     /**

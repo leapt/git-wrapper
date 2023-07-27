@@ -8,6 +8,8 @@ use Leapt\GitWrapper\Configuration;
 use Leapt\GitWrapper\Exception\GitRuntimeException;
 use Leapt\GitWrapper\Exception\InvalidGitRepositoryDirectoryException;
 use Leapt\GitWrapper\Repository;
+use Leapt\GitWrapper\Tests\Fixtures\CommandThatDoesNotHaveRunMethod;
+use Leapt\GitWrapper\Tests\Fixtures\CommandThatDoesNotImplementInterface;
 use PHPUnit\Framework\TestCase;
 
 final class RepositoryTest extends TestCase
@@ -168,6 +170,27 @@ final class RepositoryTest extends TestCase
 
         $this->expectException(InvalidGitRepositoryDirectoryException::class);
         new Repository($directory);
+    }
+
+    public function testCreateCommandThrowsExceptionIfDoesNotHaveRunMethod(): void
+    {
+        self::expectException(\RuntimeException::class);
+        Repository::createCommand(CommandThatDoesNotHaveRunMethod::class, 'test', 'test', false);
+    }
+
+    public function testCreateCommandThrowsDeprecationIfCommandClassDoesNotImplementInterface(): void
+    {
+        set_error_handler(
+            static function ($errno, $errstr) {
+                restore_error_handler();
+                throw new \Exception($errstr, $errno);
+            },
+            \E_ALL,
+        );
+
+        self::expectException(\Exception::class);
+        self::expectExceptionMessage('Passing a Command class that does not implement "Leapt\GitWrapper\CommandInterface" is deprecated.');
+        Repository::createCommand(CommandThatDoesNotImplementInterface::class, 'test', 'test', false);
     }
 
     /**

@@ -7,7 +7,7 @@ namespace Leapt\GitWrapper;
 use Leapt\GitWrapper\Exception\GitRuntimeException;
 use Symfony\Component\Process\Process;
 
-class Command
+class Command implements CommandInterface
 {
     private string $commandString;
 
