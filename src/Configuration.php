@@ -10,6 +10,9 @@ class Configuration
 {
     public const USER_NAME = 'user.name';
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $configuration = [];
 
     public function __construct(private Repository $repository)

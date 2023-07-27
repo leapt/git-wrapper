@@ -39,7 +39,8 @@ class Command
             if (1 === $process->getExitCode() && 0 === strncmp($this->commandString, 'git status', 10)) {
                 // it's ok
             } else {
-                throw new GitRuntimeException(sprintf('Command %s failed with code %s: %s', $commandToRun, $process->getExitCode(), $process->getErrorOutput()), $process->getExitCode());
+                $exitCode = $process->getExitCode() ?? 255;
+                throw new GitRuntimeException(sprintf('Command %s failed with code %s: %s', $commandToRun, $exitCode, $process->getErrorOutput()), $exitCode);
             }
         }
 

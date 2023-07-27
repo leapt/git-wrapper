@@ -3,6 +3,7 @@
 
 * Add `getLastCommit()` method
 * Improve tests & fix them locally
+* Increase PHPStan level to 7
 
 1.2.0
 -----

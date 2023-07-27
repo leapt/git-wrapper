@@ -170,6 +170,9 @@ final class RepositoryTest extends TestCase
         new Repository($directory);
     }
 
+    /**
+     * @param array<string, string> $options
+     */
     private function createEmptyRepository(array $options = []): Repository
     {
         $directory = $this->getTempDirectoryPath();
