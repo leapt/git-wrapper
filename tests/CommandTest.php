@@ -24,6 +24,7 @@ final class CommandTest extends TestCase
         ob_start();
         $repository->git('status');
         $output = ob_get_clean();
+        \assert(\is_string($output));
         self::assertStringContainsString('&& /usr/bin/git status', $output);
     }
 

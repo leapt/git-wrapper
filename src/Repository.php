@@ -15,8 +15,14 @@ class Repository
         'git_executable' => '/usr/bin/git',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private array $options;
 
+    /**
+     * @param array<string, string> $options
+     */
     public function __construct(
         private string $directory,
         private bool $debug = false,
@@ -29,7 +35,7 @@ class Repository
     /**
      * Helper method to get a list of commits which exist in $sourceBranch that do not yet exist in $targetBranch.
      *
-     * @return array formatted list of commits
+     * @return array<array<mixed>> formatted list of commits
      */
     public function getDifferenceBetweenBranches(string $targetBranch, string $sourceBranch): array
     {
@@ -40,12 +46,15 @@ class Repository
 
     /**
      * Create a new Git repository in filesystem, running "git init".
+     *
+     * @param array<string, string> $options
      */
     public static function create(string $directory, bool $debug = false, array $options = []): self
     {
         $options = array_merge(self::DEFAULT_OPTIONS, $options);
         $commandString = $options['git_executable'] . ' init';
         $command = new $options['command_class']($directory, $commandString, $debug);
+        \assert(method_exists($command, 'run'));
         $command->run();
 
         return new self($directory, $debug, $options);
@@ -53,12 +62,15 @@ class Repository
 
     /**
      * Clone a new Git repository in filesystem, running "git clone".
+     *
+     * @param array<string, string> $options
      */
     public static function cloneUrl(string $url, string $directory, bool $debug = false, array $options = []): self
     {
         $options = array_merge(self::DEFAULT_OPTIONS, $options);
         $commandString = $options['git_executable'] . ' clone ' . escapeshellarg($url) . ' ' . escapeshellarg($directory);
         $command = new $options['command_class'](getcwd(), $commandString, $debug);
+        \assert(method_exists($command, 'run'));
         $command->run();
 
         return new self($directory, $debug, $options);
@@ -69,6 +81,9 @@ class Repository
         return new Configuration($this);
     }
 
+    /**
+     * @return array<array-key, string>
+     */
     public function getBranches(string $flags = ''): array
     {
         return array_filter(preg_replace('/[\s\*]/', '', explode("\n", $this->git('branch ' . $flags))));
@@ -94,6 +109,9 @@ class Repository
         return \in_array($branchName, $this->getBranches(), true);
     }
 
+    /**
+     * @return array<array-key, string>
+     */
     public function getTags(): array
     {
         $output = $this->git('tag');
@@ -103,6 +121,8 @@ class Repository
 
     /**
      * Return the result of `git log` formatted in a PHP array.
+     *
+     * @return array<array<mixed>>
      */
     public function getCommits(int $nbCommits = 10): array
     {
@@ -111,6 +131,9 @@ class Repository
         return $this->parseLogsIntoArray($output);
     }
 
+    /**
+     * @return array<string, string|array<string, string>>
+     */
     public function getLastCommit(): array
     {
         $output = $this->git(sprintf('log -n 1 --date=%s --format=format:%s', self::DATE_FORMAT, self::LOG_FORMAT));
@@ -135,6 +158,7 @@ class Repository
         $commandString = $this->options['git_executable'] . ' ' . $commandString;
 
         $command = new $this->options['command_class']($this->directory, $commandString, $this->debug);
+        \assert(method_exists($command, 'run'));
 
         return $command->run();
     }
@@ -146,6 +170,8 @@ class Repository
 
     /**
      * Convert a formatted log string into an array.
+     *
+     * @return array<array-key, array<string, string|array<string, string>>>
      */
     private function parseLogsIntoArray(string $logOutput): array
     {
