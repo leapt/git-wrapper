@@ -134,20 +134,20 @@ final class RepositoryTest extends TestCase
     {
         $repository = $this->createEmptyRepository();
         $repository->git('remote add origin https://github.com/leapt/git-wrapper.git');
-        $repository->git('fetch origin main:main --update-head-ok');
-        self::assertSame(['main'], $repository->getBranches());
-        self::assertTrue($repository->hasBranch('main'));
+        $repository->git('fetch origin 1.x:1.x --update-head-ok');
+        self::assertSame(['1.x'], $repository->getBranches());
+        self::assertTrue($repository->hasBranch('1.x'));
 
-        $repository->git('checkout main');
-        self::assertSame('main', $repository->getCurrentBranch());
+        $repository->git('checkout 1.x');
+        self::assertSame('1.x', $repository->getCurrentBranch());
 
         $repository->git('checkout -b other_branch');
-        self::assertSame(['main', 'other_branch'], $repository->getBranches());
+        self::assertSame(['1.x', 'other_branch'], $repository->getBranches());
         self::assertTrue($repository->hasBranch('other_branch'));
         self::assertSame('other_branch', $repository->getCurrentBranch());
 
-        $repository->git('checkout main');
-        self::assertSame('main', $repository->getCurrentBranch());
+        $repository->git('checkout 1.x');
+        self::assertSame('1.x', $repository->getCurrentBranch());
 
         // Check usage adding "git" at the beginning of the command
         $repository->git('git checkout other_branch');
@@ -158,7 +158,7 @@ final class RepositoryTest extends TestCase
     {
         $directory = $this->getTempDirectoryPath();
         $repository = Repository::cloneUrl('https://github.com/leapt/git-wrapper.git', $directory);
-        self::assertSame('main', $repository->getCurrentBranch());
+        self::assertSame('1.x', $repository->getCurrentBranch());
     }
 
     public function testInitializeInvalidDirectoryMustFail(): void
