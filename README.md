@@ -11,7 +11,7 @@ Provides an object-oriented wrapper to run any Git command.
 
 ## Requirements
 
-- PHP >= 8.0
+- PHP >= 8.2
 - Git >= 1.5
 
 ## Instantiate a Repository
@@ -174,7 +174,8 @@ On most Unix system, it's `/usr/bin/git`. On Windows, it may be `C:\Program File
 ### Change the command class
 
 By default, the `Repository` class will use the `Command` class to implement Git commands.
-By replacing this option, you can use your own command implementation:
+By replacing this option, you can use your own command implementation
+(which must implement the `Leapt\GitWrapper\CommandInterface`):
 
 ```php
 use Leapt\GitWrapper\Repository;
