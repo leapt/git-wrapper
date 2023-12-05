@@ -1,3 +1,8 @@
+2.0.0
+-----
+
+* Drop support for Symfony < 6.4
+
 1.3.0
 -----
 
