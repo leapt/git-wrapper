@@ -174,11 +174,7 @@ class Repository
     public static function createCommand(string $commandClass, string $directory, string $commandString, bool $debug): object
     {
         if (!\in_array(CommandInterface::class, class_implements($commandClass), true)) {
-            trigger_deprecation('leapt/git-wrapper', '1.3', 'Passing a Command class that does not implement "%s" is deprecated.', CommandInterface::class);
-
-            if (!method_exists($commandClass, 'run')) {
-                throw new \RuntimeException(sprintf('The Command class must implement a "public function run(): string" method, the "%s" class does not.', $commandClass));
-            }
+            throw new \RuntimeException(sprintf('The Command class must implement the "%s" interface, the "%s" class does not.', CommandInterface::class, $commandClass));
         }
 
         return new $commandClass($directory, $commandString, $debug);
