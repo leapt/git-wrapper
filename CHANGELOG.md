@@ -3,6 +3,7 @@
 
 * Drop support for Symfony < 6.4
 * Drop support for PHP < 8.1, test against PHP 8.3
+* Drop deprecation layer; if a custom Command class is used, it must implement the CommandInterface
 
 1.3.0
 -----
