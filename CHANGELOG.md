@@ -2,6 +2,7 @@
 -----
 
 * Drop support for Symfony < 6.4
+* Drop support for PHP < 8.1, test against PHP 8.3
 
 1.3.0
 -----
