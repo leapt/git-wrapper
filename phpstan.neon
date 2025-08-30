@@ -6,3 +6,4 @@ parameters:
         - src
         - tests
     level: 7
+    treatPhpDocTypesAsCertain: false

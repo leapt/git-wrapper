@@ -38,13 +38,13 @@ class Configuration
 
     public function set(string $configOption, mixed $configValue): void
     {
-        $this->repository->git(sprintf('config --local %s %s', $configOption, $configValue));
+        $this->repository->git(\sprintf('config --local %s %s', $configOption, $configValue));
         unset($this->configuration[$configOption]);
     }
 
     public function remove(string $configOption): void
     {
-        $this->repository->git(sprintf('config --local --unset %s', $configOption));
+        $this->repository->git(\sprintf('config --local --unset %s', $configOption));
         unset($this->configuration[$configOption]);
     }
 }

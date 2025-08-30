@@ -21,7 +21,7 @@ class Command implements CommandInterface
 
     public function run(): string
     {
-        $commandToRun = sprintf('cd %s && %s', escapeshellarg($this->directory), $this->commandString);
+        $commandToRun = \sprintf('cd %s && %s', escapeshellarg($this->directory), $this->commandString);
 
         if ($this->debug) {
             echo $commandToRun . "\n";
@@ -40,7 +40,7 @@ class Command implements CommandInterface
                 // it's ok
             } else {
                 $exitCode = $process->getExitCode() ?? 255;
-                throw new GitRuntimeException(sprintf('Command %s failed with code %s: %s', $commandToRun, $exitCode, $process->getErrorOutput()), $exitCode);
+                throw new GitRuntimeException(\sprintf('Command %s failed with code %s: %s', $commandToRun, $exitCode, $process->getErrorOutput()), $exitCode);
             }
         }
 
