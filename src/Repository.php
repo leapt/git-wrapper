@@ -39,7 +39,7 @@ class Repository
      */
     public function getDifferenceBetweenBranches(string $targetBranch, string $sourceBranch): array
     {
-        $output = $this->git(sprintf('log %s..%s --date=%s --format=format:%s', $targetBranch, $sourceBranch, self::DATE_FORMAT, self::LOG_FORMAT));
+        $output = $this->git(\sprintf('log %s..%s --date=%s --format=format:%s', $targetBranch, $sourceBranch, self::DATE_FORMAT, self::LOG_FORMAT));
 
         return $this->parseLogsIntoArray($output);
     }
@@ -126,7 +126,7 @@ class Repository
      */
     public function getCommits(int $nbCommits = 10): array
     {
-        $output = $this->git(sprintf('log -n %d --date=%s --format=format:%s', $nbCommits, self::DATE_FORMAT, self::LOG_FORMAT));
+        $output = $this->git(\sprintf('log -n %d --date=%s --format=format:%s', $nbCommits, self::DATE_FORMAT, self::LOG_FORMAT));
 
         return $this->parseLogsIntoArray($output);
     }
@@ -136,7 +136,7 @@ class Repository
      */
     public function getLastCommit(): array
     {
-        $output = $this->git(sprintf('log -n 1 --date=%s --format=format:%s', self::DATE_FORMAT, self::LOG_FORMAT));
+        $output = $this->git(\sprintf('log -n 1 --date=%s --format=format:%s', self::DATE_FORMAT, self::LOG_FORMAT));
 
         return $this->parseLogsIntoArray($output)[0];
     }
@@ -174,7 +174,7 @@ class Repository
     public static function createCommand(string $commandClass, string $directory, string $commandString, bool $debug): object
     {
         if (!\in_array(CommandInterface::class, class_implements($commandClass), true)) {
-            throw new \RuntimeException(sprintf('The Command class must implement the "%s" interface, the "%s" class does not.', CommandInterface::class, $commandClass));
+            throw new \RuntimeException(\sprintf('The Command class must implement the "%s" interface, the "%s" class does not.', CommandInterface::class, $commandClass));
         }
 
         return new $commandClass($directory, $commandString, $debug);

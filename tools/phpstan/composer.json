@@ -1,5 +1,5 @@
 {
     "require": {
-        "phpstan/phpstan": "^1.10.26"
+        "phpstan/phpstan": "^2.1.22"
     }
 }

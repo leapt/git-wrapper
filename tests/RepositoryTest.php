@@ -73,7 +73,6 @@ final class RepositoryTest extends TestCase
         $repository->git('rm README.md');
         $repository->git('commit -m "Remove README.md"');
         $logs = $repository->getCommits(7);
-        self::assertIsArray($logs);
         self::assertCount(2, $logs);
 
         $config = $repository->getConfiguration();
@@ -115,7 +114,6 @@ final class RepositoryTest extends TestCase
         $repository->git('rm README.md');
         $repository->git('commit -m "Remove README.md"');
         $lastCommit = $repository->getLastCommit();
-        self::assertIsArray($lastCommit);
         self::assertArrayHasKey('id', $lastCommit);
         self::assertArrayHasKey('author', $lastCommit);
         self::assertArrayHasKey('committed_date', $lastCommit);
