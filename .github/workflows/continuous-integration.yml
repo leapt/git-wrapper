@@ -6,6 +6,13 @@ on:
   push:
     branches: ['2.x', '1.x']
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php-version }} - Symfony ${{ matrix.symfony-version }})
@@ -22,20 +29,21 @@ jobs:
           - '8.5'
         symfony-version:
           - '6.4.*'
-          - '7.3.*'
-          - '7.4.*@dev'
+          - '7.4.*'
         include:
-          - php-version: '8.4'
-            symfony-version: '8.0.*@dev'
           - php-version: '8.5'
-            symfony-version: '8.0.*@dev'
+            symfony-version: '8.1.*'
+          - php-version: '8.5'
+            symfony-version: '8.2.*@dev'
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: zip
@@ -47,7 +55,7 @@ jobs:
         run: composer config minimum-stability dev
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
 
       - name: Setup Git
         run: |
@@ -59,5 +67,5 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         if: matrix.php-version == '8.2' && matrix.symfony-version == '6.4.*'
